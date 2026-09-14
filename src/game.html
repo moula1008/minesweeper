@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper</title>
+    <style>
+        body { font-family: sans-serif; }
+        .cell {
+            width: 40px; height: 40px; font-size: 20px; font-weight: bold;
+            background-color: #c0c0c0; border: 3px outset #eee; cursor: pointer;
+            vertical-align: top; text-align: center; padding: 0; flex-shrink: 0;
+            touch-action: manipulation;
+        }
+        .cell:disabled {
+            background-color: #e0e0e0; border: 1px solid #999; cursor: default;
+        }
+        .num-1 { color: blue; }
+        .num-2 { color: green; }
+        .num-3 { color: red; }
+        .num-4 { color: darkblue; }
+        .num-5 { color: darkred; }
+        .num-6 { color: teal; }
+        .num-7 { color: black; }
+        .num-8 { color: gray; }
+        
+        /* 基本状態：右に100pxズレて透明（フェードアウト状態） */
+        #combo-display {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff9800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            
+            opacity: 0;
+            transform: translateX(100px); /* 右に隠しておく */
+            transition: opacity 0.5s ease, transform 0.5s ease; /* 滑らかに移動・透過する */
+        }
+
+        /* コンボ中：元の位置(0)に戻って表示（スライドイン状態） */
+        #combo-display.combo-active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 数字が増える瞬間のピクッとする動き（ポップアニメーション） */
+        .combo-pop {
+            animation: pop-anim 0.15s ease-out;
+        }
+
+        @keyframes pop-anim {
+            0% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(0) scale(1.3); }
+            100% { transform: translateX(0) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div style="padding: 10px;">
+        <h3 id="timer-display">経過時間: {{ time }} 秒</h3>
+        
+        <div id="message-display">
+            {% if game_status == "gameover" %}
+                <h2 style="color: red;">ゲームオーバー...地雷を踏みました！</h2>
+                <a href="/">トップ画面に戻る</a>
+            {% elif game_status == "clear" %}
+                <h2 style="color: blue;">ゲームクリア！おめでとうございます！</h2>
+                <a href="/">トップ画面に戻る</a>
+            {% endif %}
+        </div>
+        
+        <div style="margin: 15px 0;">
+            <button id="mode-toggle-btn" onclick="toggleMode()" 
+                    style="padding: 10px 20px; font-size: 16px; border-radius: 5px; background-color: #e0e0e0;">
+                ⛏️ 掘るモード
+            </button>
+        </div>
+
+        <div style="overflow-x: auto; max-width: 100vw; padding-bottom: 20px;">
+            <div id="board-container" style="display: inline-block;">
+                {% for row in board %}
+                    {% set y = loop.index0 %}
+                    <div style="display: flex;">
+                        {% for cell in row %}
+                            {% set x = loop.index0 %}
+                            {% set bomb_count = cell[0] %}
+                            {% set is_open = cell[1] %}
+                            {% set is_bomb = cell[2] %}
+                            {% set is_flagged = cell[3] %}
+                            
+                            <button class="cell {% if is_open and not is_bomb %}num-{{ bomb_count }}{% endif %}" 
+                                    id="cell-{{ y }}-{{ x }}"
+                                    type="button"
+                                    data-x="{{ x }}"
+                                    data-y="{{ y }}"
+                                    {% if is_open or game_status != 'playing' %}disabled{% endif %}
+                                    onclick="sendClick(this, 'open')"
+                                    oncontextmenu="sendClick(this, 'flag'); return false;">
+                                {% if is_open %}
+                                    {% if is_bomb %}💣{% elif bomb_count > 0 %}{{ bomb_count }}{% endif %}
+                                {% else %}
+                                    {% if is_flagged %}🚩{% endif %}
+                                {% endif %}
+                            </button>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div id="combo-display"></div>
+    <script src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>みたことあるマインスイーパ</h1>
+    <div style="padding: 10px;">
+        <form action="/init" method="post">
+            <!-- 盤面サイズを選択するメニュー -->
+            <label>盤面のサイズ:</label>
+            <select name="size">
+                <option value="5">5 × 5</option>
+                <option value="10" selected>10 × 10</option>
+                <option value="15">15 × 15</option>
+                <option value="20">20 × 20</option>
+            </select>
+            
+            <button type="submit" style="margin-left: 10px;">Start New Game</button>
+        </form>
+    </div>
+</body>
+</html>
