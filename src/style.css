@@ -1,0 +1,205 @@
+/* src/style.css */
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f0f2f5;
+}
+
+/* --- トップ画面（index.html）用のスタイル --- */
+.home-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 30px 15px;
+    box-sizing: border-box;
+}
+
+.menu-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 550px;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.menu-container h1 {
+    font-size: 24px;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* 初心者向けガイドセクション */
+.guide-section {
+    background-color: #f8f9fa;
+    border-left: 4px solid #3498db;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+    line-height: 1.6;
+}
+
+.guide-section h2 {
+    font-size: 18px;
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.guide-section p {
+    font-size: 14px;
+    color: #555;
+    margin: 8px 0;
+}
+
+.guide-section ul {
+    margin: 5px 0;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.guide-section li {
+    margin-bottom: 4px;
+}
+
+.start-section {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.menu-container label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    margin-right: 10px;
+}
+
+.menu-container select {
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.btn-primary {
+    padding: 10px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-beginner {
+    background-color: #3498db;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.btn-beginner:hover {
+    background-color: #2980b9;
+}
+
+.divider {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.normal-select-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+
+/* --- ゲーム画面（game.html）用のスタイル --- */
+.cell {
+    width: 40px; height: 40px; font-size: 20px; font-weight: bold;
+    background-color: #c0c0c0; border: 3px outset #eee; cursor: pointer;
+    vertical-align: top; text-align: center; padding: 0; flex-shrink: 0;
+    touch-action: manipulation;
+}
+.cell:disabled {
+    background-color: #e0e0e0; border: 1px solid #999; cursor: default;
+}
+.num-1 { color: blue; }
+.num-2 { color: green; }
+.num-3 { color: red; }
+.num-4 { color: darkblue; }
+.num-5 { color: darkred; }
+.num-6 { color: teal; }
+.num-7 { color: black; }
+.num-8 { color: gray; }
+
+/* コンボパネルのデザイン */
+#combo-display {
+    position: fixed;
+    bottom: clamp(10px, 3vw, 20px);
+    left: clamp(10px, 3vw, 20px);
+    
+    background-color: #f5f5f5;
+    height: clamp(50px, 8vw, 70px);
+    min-width: clamp(160px, 25vw, 220px);
+    box-sizing: border-box;
+    
+    padding: 0 clamp(20px, 6vw, 40px);
+    clip-path: polygon(0 0, calc(100% - clamp(15px, 4vw, 30px)) 0, 100% clamp(15px, 4vw, 30px), 100% 100%, 0 100%);
+    filter: drop-shadow(4px 4px 5px rgba(0, 0, 0, 0.3));
+    
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-120%);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#combo-display.combo-active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#combo-text {
+    font-size: clamp(20px, 5vw, 32px);
+    font-weight: bold;
+    color: #ffb300;
+    display: inline-block; 
+}
+
+.combo-pop {
+    animation: bounce-anim 0.15s ease-out;
+}
+
+@keyframes bounce-anim {
+    0%   { transform: translateY(0) scale(1); }
+    50%  { transform: translateY(-10px) scale(1.1); }
+    100% { transform: translateY(0) scale(1); }
+}

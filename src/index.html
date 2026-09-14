@@ -1,24 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>初めてのマインスイーパー</title>
+    <link rel="stylesheet" href="/src/style.css">
 </head>
-<body>
-    <h1>みたことあるマインスイーパ</h1>
-    <div style="padding: 10px;">
-        <form action="/init" method="post">
-            <!-- 盤面サイズを選択するメニュー -->
-            <label>盤面のサイズ:</label>
-            <select name="size">
-                <option value="5">5 × 5</option>
-                <option value="10" selected>10 × 10</option>
-                <option value="15">15 × 15</option>
-                <option value="20">20 × 20</option>
-            </select>
+<body class="home-body">
+    <div class="menu-container">
+        <h1>💣 はじめてのマインスイーパー</h1>
+        
+        <!-- 初心者向け説明文セクション -->
+        <div class="guide-section">
+            <h2>📖 マインスイーパーの遊び方</h2>
+            <p><strong>【ゲームの目的】</strong><br>
+            隠された地雷を避けて、安全なマスをすべて開くパズルゲームです！</p>
             
-            <button type="submit" style="margin-left: 10px;">Start New Game</button>
+            <p><strong>【基本のルールと操作】</strong></p>
+            <ul>
+                <li><strong>⛏️ 掘るモード：</strong>安全だと思うマスをタップして開きます。地雷を踏むとゲームオーバーです。</li>
+                <li><strong>🚩 旗モード：</strong>「ここに地雷がある！」と思ったら、旗を立ててマークできます。</li>
+                <li><strong>🔢 数字の意味：</strong>マスを開いたときに出る数字は、<strong>「そのマスのすぐ周囲（上下左右・斜め）にある地雷の数」</strong>を表しています。数字をヒントに地雷の位置を推理しましょう！</li>
+            </ul>
+            
+            <p><strong>【スマホで遊ぶコツ】</strong><br>
+            画面上の「モード切替ボタン」で、掘るか旗を立てるかを切り替えてタップしてください。大きな盤面は指で横スクロールして見渡せます。</p>
+        </div>
+
+        <!-- 初心者向け：ワンクリックで一番簡単な5x5を始めるボタン -->
+        <div class="start-section">
+            <form action="/init" method="post">
+                <input type="hidden" name="size" value="5">
+                <button type="submit" class="btn-primary btn-beginner">
+                    🔰 まずはここから！簡単モード (5×5) で遊ぶ
+                </button>
+            </form>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 通常の難易度選択 -->
+        <form action="/init" method="post">
+            <div class="normal-select-area">
+                <label for="size"><strong>盤面サイズを選ぶ：</strong></label>
+                <select name="size" id="size">
+                    <option value="5">5 × 5 (簡単)</option>
+                    <option value="10" selected>10 × 10 (普通)</option>
+                    <option value="15">15 × 15 (ちょっと難しい)</option>
+                    <option value="20">20 × 20 (上級者向け)</option>
+                </select>
+            </div>
+            <div style="text-align: center;">
+                <button type="submit" class="btn-primary">選んだサイズでスタート</button>
+            </div>
         </form>
     </div>
 </body>

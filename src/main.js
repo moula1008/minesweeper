@@ -75,11 +75,13 @@ function triggerCombo(count) {
     }
 }
 
+
 async function animateCombo() {
     isCountingCombo = true;
     const comboEl = document.getElementById("combo-display");
+    const comboText = document.getElementById("combo-text");
 
-    // まず全体をスライドインさせる
+    // パネルはスライドインさせるだけ（絶対に combo-pop は付けない）
     if (comboEl && !comboEl.classList.contains("combo-active")) {
         comboEl.classList.add("combo-active");
     }
@@ -87,16 +89,15 @@ async function animateCombo() {
     while (currentCombo < targetCombo) {
         currentCombo++;
         
-        if (comboEl) {
-            comboEl.innerText = `${currentCombo} COMBO!`;
+        if (comboText) {
+            comboText.innerText = `${currentCombo} COMBO!`;
             
-            // 数字が増える瞬間のポップアニメーションをリセットして再発動
-            comboEl.classList.remove("combo-pop");
-            void comboEl.offsetWidth; // ブラウザに再描画を強制
-            comboEl.classList.add("combo-pop");
+            // アニメーションは文字(comboText)だけに適用する
+            comboText.classList.remove("combo-pop");
+            void comboText.offsetWidth; 
+            comboText.classList.add("combo-pop");
         }
 
-        // 1カウントの待機時間
         await new Promise(resolve => setTimeout(resolve, 80));
     }
 
@@ -117,10 +118,15 @@ function resetCombo() {
     currentCombo = 0;
     targetCombo = 0;
     const comboEl = document.getElementById("combo-display");
+    const comboText = document.getElementById("combo-text");
+    
     if (comboEl) {
-        // スライドアウト・フェードアウトさせる
-        comboEl.classList.remove("combo-active");
-        comboEl.classList.remove("combo-pop");
+        // パネルを画面外へ戻す
+        comboEl.classList.remove("combo-active"); 
+        comboEl.classList.remove("combo-pop"); // 念のため古いクラスも剥がす
+    }
+    if (comboText) {
+        comboText.classList.remove("combo-pop");
     }
 }
 
