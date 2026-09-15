@@ -1,12 +1,10 @@
-/* src/style.css */
-
 body {
     font-family: sans-serif;
     margin: 0;
     background-color: #f0f2f5;
 }
 
-/* --- トップ画面（index.html）用のスタイル --- */
+/* --- トップ画面用のスタイル --- */
 .home-body {
     display: flex;
     flex-direction: column;
@@ -36,7 +34,6 @@ body {
     text-align: center;
 }
 
-/* 初心者向けガイドセクション */
 .guide-section {
     background-color: #f8f9fa;
     border-left: 4px solid #3498db;
@@ -137,8 +134,7 @@ body {
     flex-wrap: wrap;
 }
 
-
-/* --- ゲーム画面（game.html）用のスタイル --- */
+/* --- ゲーム画面用のスタイル --- */
 .cell {
     width: 40px; height: 40px; font-size: 20px; font-weight: bold;
     background-color: #c0c0c0; border: 3px outset #eee; cursor: pointer;
@@ -157,7 +153,22 @@ body {
 .num-7 { color: black; }
 .num-8 { color: gray; }
 
-/* コンボパネルのデザイン */
+/* 残りマス数表示 */
+#remaining-display {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #7f8c8d;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 6px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+/* コンボパネルデザイン */
 #combo-display {
     position: fixed;
     bottom: clamp(10px, 3vw, 20px);
@@ -202,4 +213,62 @@ body {
     0%   { transform: translateY(0) scale(1); }
     50%  { transform: translateY(-10px) scale(1.1); }
     100% { transform: translateY(0) scale(1); }
+}
+
+/* モーダルウィンドウ用スタイル */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.modal-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.modal-active .modal-content {
+    transform: scale(1);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+.modal-btn {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #4CAF50;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.modal-btn:hover {
+    background-color: #45a049;
 }

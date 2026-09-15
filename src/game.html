@@ -7,18 +7,13 @@
     <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
+    <!-- 右上の残りマス数表示 -->
+    <div id="remaining-display">
+        残りマス: <span id="remaining-count">{{ safe_remaining }}</span> / <span id="total-count">{{ safe_total }}</span>
+    </div>
+
     <div style="padding: 10px;">
         <h3 id="timer-display">経過時間: {{ time }} 秒</h3>
-        
-        <div id="message-display">
-            {% if game_status == "gameover" %}
-                <h2 style="color: red;">ゲームオーバー...地雷を踏みました！</h2>
-                <a href="/">トップ画面に戻る</a>
-            {% elif game_status == "clear" %}
-                <h2 style="color: blue;">ゲームクリア！おめでとうございます！</h2>
-                <a href="/">トップ画面に戻る</a>
-            {% endif %}
-        </div>
         
         <div style="margin: 15px 0;">
             <button id="mode-toggle-btn" onclick="toggleMode()" 
@@ -60,8 +55,24 @@
         </div>
     </div>
 
+    <!-- コンボ表示用パネル -->
     <div id="combo-display">
         <span id="combo-text"></span>
+    </div>
+
+    <!-- リザルト用モーダルウィンドウ -->
+    <div id="result-modal" class="modal-overlay {% if game_status != 'playing' %}modal-active{% endif %}">
+        <div class="modal-content">
+            <div id="modal-message">
+                {% if game_status == "gameover" %}
+                    <h2 style="color: #e74c3c;">ゲームオーバー<br>地雷を踏みました！</h2>
+                    <a href="/" class="modal-btn">トップ画面に戻る</a>
+                {% elif game_status == "clear" %}
+                    <h2 style="color: #27ae60;">ゲームクリア！<br>おめでとうございます！</h2>
+                    <a href="/" class="modal-btn">トップ画面に戻る</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
     <script src="/src/main.js"></script>

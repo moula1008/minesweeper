@@ -10,7 +10,6 @@
     <div class="menu-container">
         <h1>💣 はじめてのマインスイーパー</h1>
         
-        <!-- 初心者向け説明文セクション -->
         <div class="guide-section">
             <h2>📖 マインスイーパーの遊び方</h2>
             <p><strong>【ゲームの目的】</strong><br>
@@ -26,20 +25,7 @@
             <p><strong>【スマホで遊ぶコツ】</strong><br>
             画面上の「モード切替ボタン」で、掘るか旗を立てるかを切り替えてタップしてください。大きな盤面は指で横スクロールして見渡せます。</p>
         </div>
-
-        <!-- 初心者向け：ワンクリックで一番簡単な5x5を始めるボタン -->
-        <div class="start-section">
-            <form action="/init" method="post">
-                <input type="hidden" name="size" value="5">
-                <button type="submit" class="btn-primary btn-beginner">
-                    🔰 まずはここから！簡単モード (5×5) で遊ぶ
-                </button>
-            </form>
-        </div>
-
-        <hr class="divider">
-
-        <!-- 通常の難易度選択 -->
+        
         <form action="/init" method="post">
             <div class="normal-select-area">
                 <label for="size"><strong>盤面サイズを選ぶ：</strong></label>
@@ -54,6 +40,19 @@
                 <button type="submit" class="btn-primary">選んだサイズでスタート</button>
             </div>
         </form>
+        
+        <hr class="divider">
+
+        <div class="start-section">
+            <form action="/init" method="post">
+                <input type="hidden" name="size" value="5">
+                <button type="submit" class="btn-primary btn-beginner">
+                    🔰 まずはここから！簡単モード (5×5) で遊ぶ
+                </button>
+            </form>
+        </div>
+
+
     </div>
 </body>
 </html>

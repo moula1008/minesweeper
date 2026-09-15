@@ -55,10 +55,26 @@ def init_game(size: int = Form(...)):
 @app.get("/game")
 def show_board(request: Request):
     current_time = round(time.time() - start_time, 1) if game_status == "playing" else clear_time
+    
+    safe_total = 0
+    safe_remaining = 0
+    for row in board:
+        for cell in row:
+            if not cell[2]:
+                safe_total += 1
+                if not cell[1]:
+                    safe_remaining += 1
+
     return templates.TemplateResponse(
         request=request,
         name="game.html",
-        context={"board": board, "game_status": game_status, "time": current_time},
+        context={
+            "board": board, 
+            "game_status": game_status, 
+            "time": current_time,
+            "safe_total": safe_total,
+            "safe_remaining": safe_remaining
+        },
     )
 
 def reveal_empty_cells(y: int, x: int, current_board: list):
@@ -113,11 +129,23 @@ def api_click_cell(x: int = Form(...), y: int = Form(...), action: str = Form(..
 
     current_open_count = sum(1 for row in board for cell in row if cell[1])
     newly_opened = current_open_count - previous_open_count
+
+    safe_total = 0
+    safe_remaining = 0
+    for row in board:
+        for cell in row:
+            if not cell[2]:
+                safe_total += 1
+                if not cell[1]:
+                    safe_remaining += 1
+
     current_time = round(time.time() - start_time, 1) if game_status == "playing" else clear_time
     
     return JSONResponse(content={
         "status": game_status, 
         "board": board, 
         "time": current_time,
-        "newly_opened": newly_opened
+        "newly_opened": newly_opened,
+        "safe_remaining": safe_remaining,
+        "safe_total": safe_total
     })

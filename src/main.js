@@ -66,22 +66,17 @@ async function sendClick(button, action) {
 }
 
 function triggerCombo(count) {
-    // 最終的な目標コンボ数を増やす
     targetCombo += count;
-
-    // もし現在カウントアップ演出中でなければ、アニメーションを開始する
     if (!isCountingCombo) {
         animateCombo();
     }
 }
-
 
 async function animateCombo() {
     isCountingCombo = true;
     const comboEl = document.getElementById("combo-display");
     const comboText = document.getElementById("combo-text");
 
-    // パネルはスライドインさせるだけ（絶対に combo-pop は付けない）
     if (comboEl && !comboEl.classList.contains("combo-active")) {
         comboEl.classList.add("combo-active");
     }
@@ -91,8 +86,6 @@ async function animateCombo() {
         
         if (comboText) {
             comboText.innerText = `${currentCombo} COMBO!`;
-            
-            // アニメーションは文字(comboText)だけに適用する
             comboText.classList.remove("combo-pop");
             void comboText.offsetWidth; 
             comboText.classList.add("combo-pop");
@@ -121,9 +114,8 @@ function resetCombo() {
     const comboText = document.getElementById("combo-text");
     
     if (comboEl) {
-        // パネルを画面外へ戻す
         comboEl.classList.remove("combo-active"); 
-        comboEl.classList.remove("combo-pop"); // 念のため古いクラスも剥がす
+        comboEl.classList.remove("combo-pop");
     }
     if (comboText) {
         comboText.classList.remove("combo-pop");
@@ -136,15 +128,32 @@ function updateBoardUI(data) {
         timerDisplay.innerText = `経過時間: ${data.time} 秒`;
     }
 
-    const messageDiv = document.getElementById("message-display");
+    // 残りマス数の更新
+    const remainingCountEl = document.getElementById("remaining-count");
+    const totalCountEl = document.getElementById("total-count");
+    if (remainingCountEl && data.safe_remaining !== undefined) {
+        remainingCountEl.innerText = data.safe_remaining;
+    }
+    if (totalCountEl && data.safe_total !== undefined) {
+        totalCountEl.innerText = data.safe_total;
+    }
+
+    const modal = document.getElementById("result-modal");
+    const modalMessage = document.getElementById("modal-message");
 
     if (data.status === "gameover" || data.status === "clear") {
         clearInterval(timerInterval);
         
-        if (data.status === "gameover") {
-            messageDiv.innerHTML = '<h2 style="color: red;">ゲームオーバー...地雷を踏みました！</h2><br><a href="/">トップ画面に戻る</a>';
-        } else if (data.status === "clear") {
-            messageDiv.innerHTML = '<h2 style="color: blue;">ゲームクリア！おめでとうございます！</h2><br><a href="/">トップ画面に戻る</a>';
+        if (modal) {
+            modal.classList.add("modal-active");
+        }
+
+        if (modalMessage) {
+            if (data.status === "gameover") {
+                modalMessage.innerHTML = '<h2 style="color: #e74c3c;">ゲームオーバー<br>地雷を踏みました！</h2><a href="/" class="modal-btn">トップ画面に戻る</a>';
+            } else if (data.status === "clear") {
+                modalMessage.innerHTML = '<h2 style="color: #27ae60;">ゲームクリア！<br>おめでとうございます！</h2><a href="/" class="modal-btn">トップ画面に戻る</a>';
+            }
         }
     }
 
