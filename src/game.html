@@ -7,26 +7,23 @@
     <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
+    <!-- ★ ここに紙吹雪描画用のキャンバスを追加します！ -->
+    <canvas id="confetti-canvas"></canvas>
+
     <!-- 右上の残りマス数表示 -->
     <div id="remaining-display">
         残りマス: <span id="remaining-count">{{ safe_remaining }}</span> / <span id="total-count">{{ safe_total }}</span>
     </div>
 
-    <div style="padding: 10px;">
+    <!-- 全体を中央揃えにするラッパー -->
+    <div class="game-wrapper">
         <h3 id="timer-display">経過時間: {{ time }} 秒</h3>
-        
-        <div style="margin: 15px 0;">
-            <button id="mode-toggle-btn" onclick="toggleMode()" 
-                    style="padding: 10px 20px; font-size: 16px; border-radius: 5px; background-color: #e0e0e0;">
-                ⛏️ 掘るモード
-            </button>
-        </div>
 
-        <div style="overflow-x: auto; max-width: 100vw; padding-bottom: 20px;">
-            <div id="board-container" style="display: inline-block;">
+        <div class="board-scroll-area">
+            <div id="board-container">
                 {% for row in board %}
                     {% set y = loop.index0 %}
-                    <div style="display: flex;">
+                    <div class="board-row">
                         {% for cell in row %}
                             {% set x = loop.index0 %}
                             {% set bomb_count = cell[0] %}
@@ -53,6 +50,14 @@
                 {% endfor %}
             </div>
         </div>
+
+        <!-- 下部に固定されるモード切替ボタン -->
+        <div class="mode-toggle-container">
+            <button id="mode-toggle-btn" onclick="toggleMode()">
+                ⛏️ 掘るモード
+            </button>
+        </div>
+
     </div>
 
     <!-- コンボ表示用パネル -->

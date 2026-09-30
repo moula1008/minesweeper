@@ -7,8 +7,19 @@ let isCountingCombo = false;
 
 window.onload = function() {
     startTimer();
+    
+    // もしページ読み込み時にすでにクリア状態なら紙吹雪を出す
+    const modal = document.getElementById("result-modal");
+    if (modal && modal.classList.contains("modal-active")) {
+        // クリアメッセージが含まれているか簡易チェック
+        const msg = document.getElementById("modal-message");
+        if (msg && msg.innerHTML.includes("クリア")) {
+            startConfetti();
+        }
+    }
 };
 
+// ご要望の固定された0.1秒刻みタイマー関数
 function startTimer() {
     if (!timerInterval) {
         timerInterval = setInterval(() => {
@@ -17,10 +28,10 @@ function startTimer() {
                 let match = timerDisplay.innerText.match(/[\d.]+/);
                 if (match) {
                     let currentSec = parseFloat(match[0]);
-                    timerDisplay.innerText = `経過時間: ${(currentSec + 1).toFixed(1)} 秒`;
+                    timerDisplay.innerText = `経過時間: ${(currentSec + 0.1).toFixed(1)} 秒`;
                 }
             }
-        }, 1000);
+        }, 100);
     }
 }
 
@@ -128,7 +139,6 @@ function updateBoardUI(data) {
         timerDisplay.innerText = `経過時間: ${data.time} 秒`;
     }
 
-    // 残りマス数の更新
     const remainingCountEl = document.getElementById("remaining-count");
     const totalCountEl = document.getElementById("total-count");
     if (remainingCountEl && data.safe_remaining !== undefined) {
@@ -153,6 +163,8 @@ function updateBoardUI(data) {
                 modalMessage.innerHTML = '<h2 style="color: #e74c3c;">ゲームオーバー<br>地雷を踏みました！</h2><a href="/" class="modal-btn">トップ画面に戻る</a>';
             } else if (data.status === "clear") {
                 modalMessage.innerHTML = '<h2 style="color: #27ae60;">ゲームクリア！<br>おめでとうございます！</h2><a href="/" class="modal-btn">トップ画面に戻る</a>';
+                // ★ ゲームクリア時に紙吹雪を開始
+                startConfetti();
             }
         }
     }
@@ -186,4 +198,61 @@ function updateBoardUI(data) {
             }
         }
     }
+}
+
+/* --- 紙吹雪（コンフェッティ）のアニメーション処理 --- */
+function startConfetti() {
+    const canvas = document.getElementById("confetti-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+    const colors = ["#e74c3c", "#3498db", "#2ecc71", "#f1c40f", "#9b59b6", "#e67e22"];
+
+    for (let i = 0; i < 120; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            size: Math.random() * 8 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            speedY: Math.random() * 3 + 2,
+            speedX: Math.random() * 2 - 1,
+            rotation: Math.random() * 360,
+            rotationSpeed: Math.random() * 10 - 5
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((p) => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+            ctx.restore();
+
+            p.y += p.speedY;
+            p.x += p.speedX;
+            p.rotation += p.rotationSpeed;
+
+            if (p.y > canvas.height) {
+                p.y = -20;
+                p.x = Math.random() * canvas.width;
+            }
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
 }
