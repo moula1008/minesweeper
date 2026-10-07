@@ -1,12 +1,13 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    /* トップ画面と共通のベースカラーに、少しだけ奥行きのある薄いグラデーションを付与 */
     background: linear-gradient(135deg, #f0f2f5 0%, #e1e8ed 100%);
-    min-height: 100vh;
+    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden; /* 画面全体のスクロールを禁止し、中身だけスクロールさせる */
 }
 
-/* --- トップ画面用のスタイル --- */
+/* --- トップ画面用スタイル --- */
 .home-body {
     display: flex;
     flex-direction: column;
@@ -15,6 +16,7 @@ body {
     min-height: 100vh;
     padding: 30px 15px;
     box-sizing: border-box;
+    overflow-y: auto; /* トップ画面は通常スクロールOK */
 }
 
 .menu-container {
@@ -52,17 +54,14 @@ body {
     margin-bottom: 10px;
 }
 
-.guide-section p {
+.guide-section p, .guide-section ul {
     font-size: 14px;
     color: #555;
     margin: 8px 0;
 }
 
 .guide-section ul {
-    margin: 5px 0;
     padding-left: 20px;
-    font-size: 14px;
-    color: #555;
 }
 
 .guide-section li {
@@ -136,7 +135,7 @@ body {
     flex-wrap: wrap;
 }
 
-/* --- ゲーム画面用のスタイル --- */
+/* --- ゲーム画面用スタイル --- */
 .cell {
     width: 40px; height: 40px; font-size: 20px; font-weight: bold;
     background-color: #c0c0c0; border: 3px outset #eee; cursor: pointer;
@@ -155,132 +154,173 @@ body {
 .num-7 { color: black; }
 .num-8 { color: gray; }
 
-/* 残りマス数表示 */
-#remaining-display {
+/* 1. ヘッダーを画面上部に固定 */
+.game-header {
     position: fixed;
-    top: 15px;
-    right: 15px;
-    height: 36px;
-    width: 150px;
-    height: 20px;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 75px;
+    background: rgba(240, 242, 245, 0.95);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+
+#timer-display {
+    margin: 0 0 4px 0;
+    font-size: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+#info-displays-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+#bomb-display, #remaining-display {
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    white-space: nowrap; /* ★ 文字の改行・折り返しを防止 */
+    white-space: nowrap;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
-    color: #7f8c8d;
     background-color: rgba(255, 255, 255, 0.95);
-    padding: 0 16px; /* 固定幅ではなくパディングで綺麗に包む */
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    z-index: 100;
+    padding: 0 10px;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* ゲーム画面全体のレイアウト（中央揃え） */
+#bomb-display {
+    color: #e74c3c;
+}
+
+#remaining-display {
+    color: #7f8c8d;
+}
+
+/* 2. ゲーム全体のラッパー（上下の固定要素に被らないよう padding-top / bottom を確保） */
 .game-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center; 
     justify-content: center;
-    min-height: 100vh;
-    padding: 10px 0;
+    width: 100vw;
+    height: 100vh;
+    /* ヘッダーの高さ(75px) + ボタンの高さ・余白分(75px)をしっかり避ける */
+    padding: 80px 0 75px 0;
     box-sizing: border-box;
-    width: 100%;
 }
 
-.game-wrapper h3, 
-.game-wrapper div#message-display {
-    text-align: center;
-}
-
-/* 盤面のスクロールエリア：画面の高さを超えないように縦横スクロールを制限 */
+/* 盤面のスクロールエリア */
 .board-scroll-area {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
     max-width: 100vw;
-    
-    /* ★ 画面の高さに合わせて盤面領域の最大高さを制限（タイマーやボタンの分を引く） */
-    max-height: calc(100vh - 160px); 
-    
-    overflow: auto; /* ★ 縦も横もはみ出したらスクロール */
-    padding: 10px 20px;
+    overflow: auto;
+    /* ★ デフォルト（スマホなどの狭い画面）のパディング */
+    padding: 10px 40px 140px 40px; 
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth; 
 }
 
-/* 盤面の行を中央に並べる */
+/* ★ PCなど画面幅が広い（768px以上ある）場合の調整 */
+@media screen and (min-width: 768px) {
+    .board-scroll-area {
+        padding: 10px 50px 40px 50px; /* 左右のパディングを 50px にスッキリさせる */
+    }
+}
+
 .board-row {
     display: flex;
     justify-content: center; 
 }
 
-/* 盤面コンテナ全体の中央配置 */
 #board-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 auto; /* 盤面が画面幅より小さければ中央、大きければスクロール */
+    margin: auto; /* 盤面が小さければ中央、大きければスクロール */
     background: rgba(255, 255, 255, 0.6);
     padding: 15px;
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(5px);
-    flex-shrink: 0; /* 縮み防止 */
+    flex-shrink: 0;
 }
 
-/* ボタンは固定せず、盤面の下にすっきり配置 */
+/* モード切替ボタン（PC・スマホ共通で完全に統一） */
+/* モード切替ボタンを画面下に固定 */
 .mode-toggle-container {
-    margin-top: 15px;
-    text-align: center;
-    flex-shrink: 0; /* スクロール時に潰れないように保護 */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 70px;
+    /* ★ ボタンの下に半透明のグラデーション背景を敷き、マスが後ろに入り込んでも視認できるようにする */
+    background: linear-gradient(to top, rgba(240, 242, 245, 0.95) 60%, rgba(240, 242, 245, 0) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    margin: 0;
+    pointer-events: none; /* 背景部分はタッチを透過させ、ボタンだけ押せるようにする */
 }
 
 #mode-toggle-btn {
-    position: static;
-    transform: none;
-    padding: 12px 28px;
-    font-size: 16px;
+    pointer-events: auto; /* ボタン自体は押せるように戻す */
+    padding: 10px 28px;
+    font-size: 15px;
     font-weight: bold;
     border-radius: 30px;
     border: 2px solid #ccc;
+    color: #333333;
     background-color: #e0e0e0;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     transition: background-color 0.2s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #mode-toggle-btn:active {
     transform: scale(0.95);
 }
 
-/* コンボパネルデザイン */
+/* コンボパネルデザイン（ボタンやマスと被らないよう、少し上＆左側に配置） */
 #combo-display {
     position: fixed;
-    bottom: clamp(10px, 3vw, 20px);
-    left: clamp(10px, 3vw, 20px);
-    
+    /* ★ bottom の位置を 15px から「75px」くらいに上げて、下部のボタンと重ならないようにする */
+    bottom: 75px;
+    left: 15px;
     background-color: #f5f5f5;
-    height: clamp(50px, 8vw, 70px);
-    min-width: clamp(160px, 25vw, 220px);
+    height: clamp(45px, 7vw, 65px);
+    min-width: clamp(150px, 22vw, 200px);
     box-sizing: border-box;
-    
-    padding: 0 clamp(20px, 6vw, 40px);
-    clip-path: polygon(0 0, calc(100% - clamp(15px, 4vw, 30px)) 0, 100% clamp(15px, 4vw, 30px), 100% 100%, 0 100%);
+    padding: 0 clamp(15px, 5vw, 30px);
+    clip-path: polygon(0 0, calc(100% - clamp(12px, 3vw, 25px)) 0, 100% clamp(12px, 3vw, 25px), 100% 100%, 0 100%);
     filter: drop-shadow(4px 4px 5px rgba(0, 0, 0, 0.3));
-    
     pointer-events: none;
     opacity: 0;
     transform: translateX(-120%);
     transition: opacity 0.5s ease, transform 0.5s ease;
-    
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    /* ★ 重なり順をボタン(z-index: 100)より上にして、万が一重なってもコンボが手前に見えるようにする */
+    z-index: 200; 
 }
 
 #combo-display.combo-active {
@@ -305,7 +345,7 @@ body {
     100% { transform: translateY(0) scale(1); }
 }
 
-/* モーダルウィンドウ用スタイル */
+/* モーダルウィンドウ */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -317,7 +357,6 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -365,7 +404,7 @@ body {
     background-color: #45a049;
 }
 
-/* 紙吹雪用のキャンバス */
+/* 紙吹雪用キャンバス */
 #confetti-canvas {
     position: fixed;
     top: 0;
@@ -373,5 +412,5 @@ body {
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    z-index: 1500; /* モーダルの下に配置して文字の邪魔にならないようにする */
+    z-index: 1500;
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- 画面上部のヘッダーエリア（スマホでも重ならないようにまとめる） -->
+    <div class="game-header">
+        <h3 id="timer-display">経過時間: 0.0 秒</h3>
+        <div id="info-displays-container">
+            <div id="bomb-display">
+                💣 <span id="total-bomb-count">0</span>
+            </div>
+            <div id="remaining-display">
+                残り: <span id="remaining-count">0</span>/<span id="total-count">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ゲーム画面レイアウト -->
+    <div class="game-wrapper">
+        <div class="board-scroll-area">
+            <div id="board-container"></div>
+        </div>
+
+        <div class="mode-toggle-container">
+            <button id="mode-toggle-btn" onclick="toggleMode()">
+                ⛏️ 掘るモード
+            </button>
+        </div>
+    </div>
+
+    <div id="combo-display">
+        <span id="combo-text"></span>
+    </div>
+
+    <div id="result-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modal-message"></div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

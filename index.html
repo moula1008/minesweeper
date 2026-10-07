@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初めてのマインスイーパー</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="home-body">
+    <div class="menu-container">
+        <h1>💣 はじめてのマインスイーパー</h1>
+        
+        <div class="guide-section">
+            <h2>📖 マインスイーパーの遊び方</h2>
+            <p><strong>【ゲームの目的】</strong><br>
+            隠された地雷を避けて、安全なマスをすべて開くパズルゲームです！</p>
+            
+            <p><strong>【基本のルールと操作】</strong></p>
+            <ul>
+                <li><strong>⛏️ 掘るモード：</strong>安全だと思うマスをタップして開きます。地雷を踏むとゲームオーバーです。</li>
+                <li><strong>🚩 旗モード：</strong>「ここに地雷がある！」と思ったら、旗を立ててマークできます。</li>
+                <li><strong>🔢 数字の意味：</strong>マスを開けたときに出る数字は、<strong>「そのマスのすぐ周囲（上下左右・斜め）にある地雷の数」</strong>を表しています。数字をヒントに地雷の位置を推理しましょう！</li>
+                <li><strong>💣 地雷の数：</strong>すべてのマスの約20%（2割）に自動で配置されます！</li>
+            </ul>
+            
+            <p><strong>【スマホで遊ぶコツ】</strong><br>
+            画面上の「モード切替ボタン」で、掘るか旗を立てるかを切り替えてタップしてください。大きな盤面は指で横スクロールして見渡せます。</p>
+        </div>
+
+        <div class="start-section">
+            <button type="button" class="btn-primary btn-beginner" onclick="startGame(5)">
+                🔰 まずはここから！簡単モード (5×5) で遊ぶ
+            </button>
+        </div>
+
+        <hr class="divider">
+
+        <div class="normal-select-area">
+            <label for="size"><strong>盤面サイズを選ぶ：</strong></label>
+            <select id="size">
+                <option value="5">5 × 5 (簡単)</option>
+                <option value="10" selected>10 × 10 (普通)</option>
+                <option value="15">15 × 15 (ちょっと難しい)</option>
+                <option value="20">20 × 20 (上級者向け)</option>
+            </select>
+        </div>
+        <div style="text-align: center;">
+            <button type="button" class="btn-primary" onclick="startCustomGame()">選んだサイズでスタート</button>
+        </div>
+    </div>
+
+    <script>
+        function startGame(size) {
+            window.location.href = `game.html?size=${size}`;
+        }
+
+        function startCustomGame() {
+            const size = document.getElementById("size").value;
+            window.location.href = `game.html?size=${size}`;
+        }
+    </script>
+</body>
+</html>
