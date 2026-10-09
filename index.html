@@ -19,16 +19,14 @@
             <ul>
                 <li><strong>⛏️ 掘るモード：</strong>安全だと思うマスをタップして開きます。地雷を踏むとゲームオーバーです。</li>
                 <li><strong>🚩 旗モード：</strong>「ここに地雷がある！」と思ったら、旗を立ててマークできます。</li>
-                <li><strong>🔢 数字の意味：</strong>マスを開けたときに出る数字は、<strong>「そのマスのすぐ周囲（上下左右・斜め）にある地雷の数」</strong>を表しています。数字をヒントに地雷の位置を推理しましょう！</li>
-                <li><strong>💣 地雷の数：</strong>すべてのマスの約20%（2割）に自動で配置されます！</li>
+                <li><strong>🔢 数字の意味：</strong>マスを開けたときに出る数字は、<strong>「そのマスのすぐ周囲（上下左右・斜め）にある地雷の数」</strong>を表しています。</li>
+                <li><strong>💣 地雷の数：</strong>簡単モードは約10%（1割）、その他のモードは約20%（2割）に配置されます。</li>
             </ul>
-            
-            <p><strong>【スマホで遊ぶコツ】</strong><br>
-            画面上の「モード切替ボタン」で、掘るか旗を立てるかを切り替えてタップしてください。大きな盤面は指で横スクロールして見渡せます。</p>
         </div>
 
         <div class="start-section">
-            <button type="button" class="btn-primary btn-beginner" onclick="startGame(5)">
+            <!-- 🔰 簡単モードボタン：地雷1割（アシスト・救済なし） -->
+            <button type="button" class="btn-primary btn-beginner" onclick="startBeginnerGame()">
                 🔰 まずはここから！簡単モード (5×5) で遊ぶ
             </button>
         </div>
@@ -50,8 +48,8 @@
     </div>
 
     <script>
-        function startGame(size) {
-            window.location.href = `game.html?size=${size}`;
+        function startBeginnerGame() {
+            window.location.href = `game.html?size=5&mode=beginner`;
         }
 
         function startCustomGame() {

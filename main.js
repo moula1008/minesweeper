@@ -1,4 +1,3 @@
-// --- ゲームの状態管理変数 ---
 let boardWidth = 10;
 let boardHeight = 10;
 let bombCount = 10;
@@ -22,17 +21,18 @@ let isCountingCombo = false;
 window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
     const size = parseInt(urlParams.get('size')) || 10;
+    const mode = urlParams.get('mode');
     
     const width = size;
     const height = size;
     
-    // ★ 地雷の割合を「2割(0.2)」に変更
-    const bombs = Math.max(1, Math.floor(width * height * 0.2));
+    // 簡単モード(beginner)は地雷1割(0.1)、それ以外は2割(0.2)
+    const ratio = (mode === 'beginner') ? 0.1 : 0.2;
+    const bombs = Math.max(1, Math.floor(width * height * ratio));
 
     initGame(width, height, bombs);
 };
 
-// --- ゲーム初期化 ---
 function initGame(width, height, bombs) {
     boardWidth = width;
     boardHeight = height;
@@ -41,6 +41,8 @@ function initGame(width, height, bombs) {
     firstClick = true;
     elapsedTime = 0;
     
+    document.body.className = `board-size-${width}`;
+
     if (timerInterval) clearInterval(timerInterval);
     timerInterval = null;
 
@@ -51,7 +53,7 @@ function initGame(width, height, bombs) {
     for (let y = 0; y < boardHeight; y++) {
         let row = [];
         for (let x = 0; x < boardWidth; x++) {
-            row.push([0, false, false, false]); // [周囲地雷数, 開いているか, 地雷か, 旗か]
+            row.push([0, false, false, false]); 
         }
         board.push(row);
     }
@@ -61,7 +63,6 @@ function initGame(width, height, bombs) {
     startTimer();
 }
 
-// --- タイマー処理（0.1秒刻み固定） ---
 function startTimer() {
     if (!timerInterval) {
         timerInterval = setInterval(() => {
@@ -76,7 +77,6 @@ function startTimer() {
     }
 }
 
-// --- 地雷のランダム配置（初回クリック位置を避ける） ---
 function placeBombs(firstX, firstY) {
     let placed = 0;
     while (placed < bombCount) {
@@ -91,6 +91,10 @@ function placeBombs(firstX, firstY) {
         placed++;
     }
 
+    recalculateBombs();
+}
+
+function recalculateBombs() {
     for (let y = 0; y < boardHeight; y++) {
         for (let x = 0; x < boardWidth; x++) {
             if (board[y][x][2]) continue;
@@ -109,7 +113,6 @@ function placeBombs(firstX, firstY) {
     }
 }
 
-// --- クリック処理 ---
 function handleClick(x, y, action) {
     if (gameStatus !== 'playing') return;
 
@@ -132,6 +135,7 @@ function handleClick(x, y, action) {
         firstClick = false;
     }
 
+    // 地雷を踏んだときは通常通りゲームオーバー
     if (board[y][x][2]) {
         board[y][x][1] = true;
         gameStatus = 'gameover';
@@ -150,7 +154,6 @@ function handleClick(x, y, action) {
     updateUI();
 }
 
-// マスを開く再帰処理
 function openCell(x, y) {
     if (x < 0 || x >= boardWidth || y < 0 || y >= boardHeight) return 0;
     if (board[y][x][1] || board[y][x][3]) return 0;
@@ -205,7 +208,6 @@ function endGame() {
     }
 }
 
-// --- HTML描画・UI更新 ---
 function renderBoardHTML() {
     const container = document.getElementById("board-container");
     if (!container) return;
@@ -234,7 +236,6 @@ function renderBoardHTML() {
 }
 
 function updateUI() {
-    // 地雷総数と残りマス数を更新
     const totalBombEl = document.getElementById("total-bomb-count");
     if (totalBombEl) totalBombEl.innerText = bombCount;
 
@@ -285,11 +286,8 @@ function toggleMode() {
     }
 }
 
-// --- コンボアニメーション ---
 function triggerCombo(count) {
     targetCombo += count;
-    
-    // すでにカウント中（表示中）であれば、フェードインの処理はスキップしてターゲット数だけ増やす
     if (!isCountingCombo) {
         animateCombo();
     }
@@ -300,21 +298,18 @@ async function animateCombo() {
     const comboEl = document.getElementById("combo-display");
     const comboText = document.getElementById("combo-text");
 
-    // まだ表示されていなければ、ここで初めてフェードイン（表示）させる
     if (comboEl && !comboEl.classList.contains("combo-active")) {
         comboEl.classList.add("combo-active");
     }
 
-    // 目標のコンボ数（targetCombo）に到達するまでカウントアップ
     while (currentCombo < targetCombo) {
         currentCombo++;
         if (comboText) {
             comboText.innerText = `${currentCombo} COMBO!`;
             comboText.classList.remove("combo-pop");
-            void comboText.offsetWidth; // アニメーションの再トリガー用トリックス
+            void comboText.offsetWidth; 
             comboText.classList.add("combo-pop");
         }
-        // たくさんのマスが一気に開いたときはテンポよくカウントアップするように間隔を少し短く（50ms）
         await new Promise(resolve => setTimeout(resolve, 50));
     }
 
@@ -336,7 +331,6 @@ function resetCombo() {
     if (comboText) comboText.classList.remove("combo-pop");
 }
 
-// --- 紙吹雪アニメーション ---
 function startConfetti() {
     const canvas = document.getElementById("confetti-canvas");
     if (!canvas) return;
