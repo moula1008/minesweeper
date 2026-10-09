@@ -291,7 +291,7 @@ body.board-size-20 .board-scroll-area { padding: 5px 20px 60px 20px; }
 body.board-size-20 .mode-toggle-container { margin-top: 8px; margin-bottom: 10px; }
 body.board-size-20 #mode-toggle-btn { padding: 8px 20px; font-size: 14px; }
 
-/* コンボパネルデザイン（画面右上に配置） */
+/* --- コンボパネルデザイン（画面右上に配置） --- */
 #combo-display {
     position: fixed;
     top: 15px;
@@ -317,11 +317,6 @@ body.board-size-20 #mode-toggle-btn { padding: 8px 20px; font-size: 14px; }
 #combo-display.combo-active {
     opacity: 1;
     transform: translateY(0);
-}
-
-#combo-display.combo-active ~ .game-header #info-displays-container,
-body:has(#combo-display.combo-active) #info-displays-container {
-    opacity: 0;
 }
 
 #combo-text {

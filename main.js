@@ -1,6 +1,7 @@
 let boardWidth = 10;
 let boardHeight = 10;
 let bombCount = 10;
+let flagCount = 0;
 
 let board = []; 
 let gameStatus = 'playing'; 
@@ -37,6 +38,7 @@ function initGame(width, height, bombs) {
     boardWidth = width;
     boardHeight = height;
     bombCount = bombs;
+    flagCount = 0;
     gameStatus = 'playing';
     firstClick = true;
     elapsedTime = 0;
@@ -123,7 +125,16 @@ function handleClick(x, y, action) {
     if (action === 'flag') {
         if (!board[y][x][1]) {
             board[y][x][3] = !board[y][x][3];
+            
+            // ★ 追加：旗を立てたらカウントを増やし、外したら減らす
+            if (board[y][x][3]) {
+                flagCount++;
+            } else {
+                flagCount--;
+            }
+            
             updateCellUI(x, y);
+            updateUI(); // 画面上の爆弾カウンターを更新するために呼ぶ
         }
         return;
     }
@@ -237,7 +248,10 @@ function renderBoardHTML() {
 
 function updateUI() {
     const totalBombEl = document.getElementById("total-bomb-count");
-    if (totalBombEl) totalBombEl.innerText = bombCount;
+    if (totalBombEl) {
+        const remainingBombs = bombCount - flagCount;
+        totalBombEl.innerText = remainingBombs;
+    }
 
     const remainingCountEl = document.getElementById("remaining-count");
     if (remainingCountEl) remainingCountEl.innerText = safeRemaining;
